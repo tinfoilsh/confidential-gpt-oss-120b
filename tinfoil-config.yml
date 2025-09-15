@@ -33,7 +33,3 @@ shim:
   paths:
     - /v1/chat/completions
     - /metrics
-  origins:
-    - https://tinfoil.sh
-    - https://chat.tinfoil.sh
-    - http://localhost:3000
