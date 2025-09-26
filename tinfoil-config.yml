@@ -17,7 +17,7 @@ containers:
       "--runtime", "nvidia",
       "--gpus", "all",
       "--ipc", "host",
-      "vllm/vllm-openai:gptoss",
+      "vllm/vllm-openai:v0.10.2",
       "--model", "/tinfoil/mpk/mpk-7614dc03b6dd12cae1ee66d8c89c559803bca7be1a60c6655dca8362b298782e",
       "--served-model-name", "gpt-oss-120b",
       "--gpu-memory-utilization", "0.95",
@@ -33,3 +33,4 @@ shim:
   paths:
     - /v1/chat/completions
     - /metrics
+    - /v1/responses
