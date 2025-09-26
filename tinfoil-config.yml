@@ -20,6 +20,8 @@ containers:
       "vllm/vllm-openai:v0.10.2",
       "--model", "/tinfoil/mpk/mpk-7614dc03b6dd12cae1ee66d8c89c559803bca7be1a60c6655dca8362b298782e",
       "--served-model-name", "gpt-oss-120b",
+      "--enable-auto-tool-choice",
+      "--tool-call-parser", "openai",
       "--gpu-memory-utilization", "0.95",
       "--port", "8001"
     ]
