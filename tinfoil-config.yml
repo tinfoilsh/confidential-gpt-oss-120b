@@ -7,8 +7,8 @@ vllm: false
 
 models:
   - name: "gpt-oss-120b"
-    repo: "openai/gpt-oss-120b@a9cc02bbe46b5935075a7cda03be5bb3192daf01"
-    mpk: "7614dc03b6dd12cae1ee66d8c89c559803bca7be1a60c6655dca8362b298782e_195764072448_fe214b91-d2bd-5100-b0a1-12c446810ab8"
+    repo: "openai/gpt-oss-120b@b5c939de8f754692c1647ca79fbf85e8c1e70f8a"
+    mpk: "db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72_195764056064_0eefa619-50b7-588f-a072-d405fb439d36"
 
 containers:
   - name: "gpt-oss-120b"
@@ -18,7 +18,7 @@ containers:
       "--gpus", "all",
       "--ipc", "host",
       "vllm/vllm-openai:v0.11.0",
-      "--model", "/tinfoil/mpk/mpk-7614dc03b6dd12cae1ee66d8c89c559803bca7be1a60c6655dca8362b298782e",
+      "--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72",
       "--served-model-name", "gpt-oss-120b",
       "--enable-auto-tool-choice",
       "--tool-call-parser", "openai",
