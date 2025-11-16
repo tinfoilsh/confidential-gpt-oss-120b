@@ -1,8 +1,8 @@
-shim-version: v0.1.9@sha256:410510c9e8e4c7489dd201fede302dee8455075ca28f4f0abbf84bded943b8f1
-cvm-version: 0.4.1
-ovmf-version: 0.0.2
+shim-version: v0.2.10@sha256:f9040a48106ab06c290fd9b225d4dd53a2daad715c9107594d4310b21592039f
+cvm-version: 0.5.7
 cpus: 8
 memory: 65536
+gpus: full
 vllm: false
 
 models:
@@ -17,7 +17,7 @@ containers:
       "--runtime", "nvidia",
       "--gpus", "all",
       "--ipc", "host",
-      "vllm/vllm-openai:v0.11.0",
+      "vllm/vllm-openai:v0.11.0@sha256:014a95f21c9edf6abe0aea6b07353f96baa4ec291c427bb1176dc7c93a85845c",
       "--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72",
       "--served-model-name", "gpt-oss-120b",
       "--enable-auto-tool-choice",
