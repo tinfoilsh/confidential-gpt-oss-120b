@@ -1,9 +1,8 @@
-shim-version: v0.2.10@sha256:f9040a48106ab06c290fd9b225d4dd53a2daad715c9107594d4310b21592039f
-cvm-version: 0.5.7
-cpus: 8
+shim-version: v0.2.14@sha256:24d59ce41ad00a05ab5a37708b0d8b07a7d09abb1b74b75ee4862f688d093949
+cvm-version: 0.5.8
+cpus: 16
 memory: 65536
 gpus: full
-vllm: false
 
 models:
   - name: "gpt-oss-120b"
@@ -29,10 +28,11 @@ containers:
 shim:
   listen-port: 443
   upstream-port: 8001
-  publish-attestation: false
+  publish-attestation: true
   tls-challenge: dns
   control-plane: https://api.tinfoil.sh
   paths:
     - /v1/chat/completions
     - /metrics
     - /v1/responses
+    - /health
