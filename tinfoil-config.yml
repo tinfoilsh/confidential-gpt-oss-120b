@@ -1,5 +1,5 @@
-shim-version: v0.2.15@sha256:5ca748b384b78b7e686b57ca66d9b3c552038ebab2ce60305004f76e573a8458
-cvm-version: 0.5.8
+shim-version: v0.3.5@sha256:f44c65a1f7db476be20c3431bb6facea8c2966606a07fbb5724a619f82bfa558
+cvm-version: 0.5.16
 cpus: 16
 memory: 65536
 gpus: full
@@ -16,7 +16,7 @@ containers:
       "--runtime", "nvidia",
       "--gpus", "all",
       "--ipc", "host",
-      "vllm/vllm-openai:v0.12.0@sha256:6766ce0c459e24b76f3e9ba14ffc0442131ef4248c904efdcbf0d89e38be01fe",
+      "vllm/vllm-openai:v0.13.0@sha256:d623253f2ba246378421c9642e20885e65257f38418ff26d48c81aea1702521b",
       "--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72",
       "--served-model-name", "gpt-oss-120b",
       "--enable-auto-tool-choice",
@@ -28,9 +28,7 @@ containers:
 shim:
   listen-port: 443
   upstream-port: 8001
-  publish-attestation: true
-  tls-challenge: dns
-  control-plane: https://api.tinfoil.sh
+  authenticated: true 
   paths:
     - /v1/chat/completions
     - /metrics
