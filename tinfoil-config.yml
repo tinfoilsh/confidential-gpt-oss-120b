@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
-    image: "vllm/vllm-openai:v0.14.1-cu130@sha256:6fc52be4609fc19b09c163be2556976447cc844b8d0d817f19bc9e1f44b48d5a"
+    image: "vllm/vllm-openai:v0.15.1-cu130@sha256:6daf4c3bab1bfb0180069bd8f2a035c1c981a424584f5b0480caa9efd9933f72"
     runtime: nvidia
     gpus: all
     ipc: host
