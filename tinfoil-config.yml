@@ -1,6 +1,6 @@
-shim-version: v0.4.1@sha256:3187744b40047060b9567d4b964a394ea0f21b29f99dd371b3e1c91ecee3c196
-cvm-version: 0.6.8
+cvm-version: 0.7.1
 cpus: 16
+gpus: 1
 memory: 65536
 
 models:
@@ -10,12 +10,10 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
-    image: "vllm/vllm-openai:v0.16.0-cu130@sha256:9e6e8a306b46b249d637d6da056753fd258f89ad84bf0e12afc579124571288e"
+    image: "vllm/vllm-openai:v0.17.0-cu130@sha256:de06f6d78a2ce86856094a643d6c914d8bd7109f73c2e30f38097197b2f2bba1"
     runtime: nvidia
     gpus: all
     ipc: host
-    env:
-      - LD_LIBRARY_PATH: "/usr/local/nvidia/lib64:/usr/local/nvidia/lib:/usr/lib/x86_64-linux-gnu"
     command: [
       "--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72",
       "--served-model-name", "gpt-oss-120b",
@@ -26,9 +24,10 @@ containers:
     ]
 
 shim:
-  listen-port: 443
   upstream-port: 8001
-  authenticated: true 
+  authenticated: true
+  authenticated-endpoints:
+    - /v1/chat/completions
   paths:
     - /v1/chat/completions
     - /metrics
