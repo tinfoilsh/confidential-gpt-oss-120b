@@ -1,7 +1,7 @@
-cvm-version: 0.7.3
+cvm-version: 0.7.4
+memory: 65536
 cpus: 16
 gpus: 1
-memory: 65536
 
 models:
   - name: "gpt-oss-120b"
@@ -10,10 +10,11 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
-    image: "vllm/vllm-openai:v0.17.0-cu130@sha256:de06f6d78a2ce86856094a643d6c914d8bd7109f73c2e30f38097197b2f2bba1"
+    image: "vllm/vllm-openai:v0.19.0-x86_64-cu130@sha256:da83ab68697f08b48a4c06a916411b2853eed69f01b482d41fbf3fab69b4c7be"
     runtime: nvidia
     gpus: all
     ipc: host
+    restart: always
     env:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     command: [
@@ -24,6 +25,11 @@ containers:
       "--gpu-memory-utilization", "0.95",
       "--port", "8001"
     ]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30m
 
 shim:
   upstream-port: 8001
