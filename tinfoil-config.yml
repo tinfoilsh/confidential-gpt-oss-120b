@@ -1,4 +1,4 @@
-cvm-version: 0.7.5
+cvm-version: 0.10.2
 memory: 65536
 cpus: 16
 gpus: 1
@@ -10,11 +10,16 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
-    image: "vllm/vllm-openai:v0.19.0-x86_64-cu130@sha256:da83ab68697f08b48a4c06a916411b2853eed69f01b482d41fbf3fab69b4c7be"
+    image: "vllm/vllm-openai:v0.22.0@sha256:0fec7ec5f3e6bc168e54899935fb0557da908a4832a1dbc88e2debcf2f889416"
     runtime: nvidia
     gpus: all
     ipc: host
     restart: always
+    read_only: false
+    cap_add:
+      - IPC_LOCK
+      - SYS_RESOURCE
+      - SYS_NICE
     env:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     command: [
@@ -30,6 +35,9 @@ containers:
       interval: 30s
       timeout: 5s
       start_period: 30m
+    tmpfs:
+      /tmp: size=512m,mode=1777,exec
+      /root: size=2g,mode=0700,exec
 
 shim:
   upstream-port: 8001
