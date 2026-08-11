@@ -1,0 +1,68 @@
+# Fix for vllm-project/vllm#50690: gpt-oss chat completions return 500
+# "Unexpected token 200002 while expecting start token 200006" when
+# ignore_eos=true.
+#
+# ignore_eos suppresses Harmony stop tokens (<|return|>=200002,
+# <|call|>=200012), so generation continues past the end of the assistant
+# turn. The trailing tokens are fed to the StreamableParser state machine,
+# which after <|end|> expects <|start|> (200006), gets <|return|>, and raises
+# HarmonyError. The exception is uncaught, so the request 500s — even though
+# the engine finished generating successfully (0 engine errors).
+#
+# Fix: catch HarmonyError and stop feeding the parser. Messages parsed before
+# the error are intact (the turn completed at <|end|>), so the response content
+# is returned correctly. This is the parser-side half described in issue #50690
+# (cf. vllm-project/vllm#41950, closed without merging — "needs reimplementation
+# after the recent refactor"). Unlike #41950, this also fixes the non-streaming
+# path (parse_output_into_messages), which is 99.9% of our affected traffic.
+#
+# Upstream issue: https://github.com/vllm-project/vllm/issues/50690
+# Upstream PR (reference, stale): https://github.com/vllm-project/vllm/pull/41950
+# Tested against: vllm v0.22.0 (vllm/vllm-openai:v0.22.0)
+
+--- a/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/parser/harmony_utils.py
++++ b/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/parser/harmony_utils.py
+@@ -9,6 +9,7 @@
+     Author,
+     Conversation,
+     DeveloperContent,
++    HarmonyError,
+     HarmonyEncodingName,
+     Message,
+     ReasoningEffort,
+@@ -376,7 +377,11 @@
+ def parse_output_into_messages(token_ids: Iterable[int]) -> StreamableParser:
+     parser = get_streamable_parser_for_assistant()
+     for token_id in token_ids:
+-        parser.process(token_id)
++        try:
++            parser.process(token_id)
++        except HarmonyError:
++            logger.warning("Harmony parser error under ignore_eos; returning partial output")
++            break
+     return parser
+ 
+ 
+--- a/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/chat_completion/serving.py
++++ b/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/chat_completion/serving.py
+@@ -61,6 +61,7 @@
+     get_streamable_parser_for_assistant,
+     parse_chat_output,
+ )
++from openai_harmony import HarmonyError
+ from vllm.entrypoints.openai.utils import maybe_filter_parallel_tool_calls
+ from vllm.entrypoints.utils import get_max_tokens, should_include_usage
+ from vllm.inputs import EngineInput
+@@ -627,7 +628,11 @@
+                         # Track accumulated content per token with their state
+                         token_states: list[TokenState] = []
+                         for token_id in output.token_ids:
+-                            harmony_parser.process(token_id)
++                            try:
++                                harmony_parser.process(token_id)
++                            except HarmonyError:
++                                logger.warning("Harmony parser error under ignore_eos; returning partial stream")
++                                break
+                             token_delta = harmony_parser.last_content_delta or ""
+                             token_states.append(
+                                 TokenState(
