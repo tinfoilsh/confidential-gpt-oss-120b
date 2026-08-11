@@ -20,7 +20,7 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
-    image: "ghcr.io/tinfoilsh/confidential-gpt-oss-120b@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    image: "ghcr.io/tinfoilsh/confidential-gpt-oss-120b@sha256:e431b1f99eaba3865b860383ce861d70ba3a1e8cbe2c90e3cf12356f9bafa80e" # v0.0.27
     runtime: nvidia
     gpus: all
     restart: always
