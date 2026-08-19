@@ -20,13 +20,14 @@ models:
 
 containers:
   - name: "gpt-oss-120b"
+    models: ["gpt-oss-120b"]
     image: "ghcr.io/tinfoilsh/confidential-gpt-oss-120b@sha256:0000000000000000000000000000000000000000000000000000000000000000"
     runtime: nvidia
     gpus: all
     restart: always
     env:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
-    command: ["--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72", "--served-model-name",
+    command: ["--model", "/tinfoil/models/gpt-oss-120b", "--served-model-name",
       "gpt-oss-120b", "--enable-auto-tool-choice", "--tool-call-parser", "openai", "--gpu-memory-utilization", "0.95", "--scheduling-policy",
       "priority", "--port", "8001"]
     tmpfs:
