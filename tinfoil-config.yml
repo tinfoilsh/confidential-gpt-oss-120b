@@ -28,7 +28,7 @@ containers:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     command: ["--model", "/tinfoil/mpk/mpk-db5daddec41a3be3b51d1f4d009fb0e9b1243c2765e2bc5121acac79ab070a72", "--served-model-name",
       "gpt-oss-120b", "--enable-auto-tool-choice", "--tool-call-parser", "openai", "--gpu-memory-utilization", "0.95", "--scheduling-policy",
-      "priority", "--port", "8001"]
+      "priority", "--enable-force-include-usage", "--middleware", "tinfoil_usage.UsageMetricsMiddleware", "--enable-prompt-tokens-details", "--port", "8001"]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
       /root: size=2g,mode=0700,exec
