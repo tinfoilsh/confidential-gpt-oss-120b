@@ -18,3 +18,9 @@ RUN set -eux; \
     find /usr/local/lib/python3.12/dist-packages/vllm -name '__pycache__' -type d -exec rm -rf {} + || true; \
     rm -rf /tmp/tinfoil-patches; \
     python3 -c "import vllm; print('vllm', vllm.__version__, 'with tinfoil gpt-oss Harmony ignore_eos patch')"
+
+ADD --checksum=sha256:dd654b19b81907030ecd3b3229c10282df2a16bdae49f7beaaa423b54a4caec4 \
+    https://raw.githubusercontent.com/tinfoilsh/tinfoil-usage/5d0a81fe9c5345b734b385449563adf02a476b26/tinfoil_usage.py \
+    /opt/tinfoil/tinfoil_usage.py
+ENV PYTHONPATH=/opt/tinfoil
+RUN python3 -B -c "import tinfoil_usage; print('usage metering ready:', tinfoil_usage.TRAILER_SUPPORT)"
